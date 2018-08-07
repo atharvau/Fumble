@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "772098465146",
+    "firebase_url": "https://monk-83fbf.firebaseio.com",
+    "project_id": "monk-83fbf",
+    "storage_bucket": "monk-83fbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772098465146:android:7084887a32b01c21",
+        "android_client_info": {
+          "package_name": "com.example.atharva.memeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772098465146-7ckjivlp7f10s7fs47qv8t2l3mmngvcu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBu6HzxLE4eHDYYZJh2KKdayx9AI4Jeyo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
