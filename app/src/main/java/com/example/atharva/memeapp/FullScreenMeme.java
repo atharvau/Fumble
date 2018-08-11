@@ -85,15 +85,7 @@ findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 Log.d("A", "onBitmapLoaded: ");
 
-                Intent share = new Intent(Intent.ACTION_SEND);
-                share.setType("image/jpeg");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getContentResolver(),
-                        bitmap, "Title", null);
-                Uri imageUri =  Uri.parse(path);
-                share.putExtra(Intent.EXTRA_STREAM, imageUri);
-                startActivity(Intent.createChooser(share, "Select"));            }
+                       }
 
             @Override
             public void onBitmapFailed(Exception e, Drawable errorDrawable) {
@@ -107,8 +99,6 @@ findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
         });
     }
 });
-
-
 
     }
 

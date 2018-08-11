@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference mdb;
     public static ArrayList<Modelmemepost> Post = new ArrayList<Modelmemepost>();
     public static ArrayList<Modelmemepost> REVPost = new ArrayList<Modelmemepost>();
-    public static ArrayList<String> List = new ArrayList<String>();
+       public static ArrayList<String> List = new ArrayList<String>();
     public static ArrayList<String> REVList = new ArrayList<String>();
 
 
@@ -68,9 +69,18 @@ uid="a";
 
 
 
+        Delete(0);
+
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivity.this,Topposts.class);
+                startActivity(intent);
 
 
 
+            }
+        });
 
 findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
     @Override
@@ -83,6 +93,24 @@ findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
     }
 
 });
+
+
+
+
+
+
+findViewById(R.id.mess).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Intent intent=new Intent(MainActivity.this,Messages.class);
+        startActivity(intent);
+
+    }
+});
+
+
+
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -263,19 +291,77 @@ public  void getList(){
                 mMessageList.setLayoutManager(linearLayoutManager);
                 myAdapter=new MyAdapter(REVList,MainActivity.this);
                 mMessageList.setAdapter(myAdapter);
-
+myAdapter.notifyDataSetChanged();
                 Log.d("A", REVList.size()+"");
+
+                if(dataSnapshot.getChildrenCount()==0){
+                    Toast.makeText(getBaseContext(),"A",Toast.LENGTH_SHORT).show();
+                }
+
 
 
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                REVList.clear();
 
+                String a=dataSnapshot.getValue().toString();
+                List.add(a);
+
+
+                int size2 = List.size() - 1;
+                for (int i = size2; i >= 0; i--) {
+                    REVList.add(List.get(i));
+
+                }
+
+
+
+                linearLayoutManager=new LinearLayoutManager(MainActivity.this);
+                RecyclerView mMessageList= (RecyclerView) findViewById(R.id.recyclerview);
+
+                mMessageList.setHasFixedSize(true);
+                mMessageList.setLayoutManager(linearLayoutManager);
+                myAdapter=new MyAdapter(REVList,MainActivity.this);
+                mMessageList.setAdapter(myAdapter);
+
+                Log.d("A", REVList.size()+"");
+                myAdapter.notifyDataSetChanged();
+                if(dataSnapshot.getChildrenCount()==0){
+                    Toast.makeText(getBaseContext(),"A",Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                REVList.clear();
+
+                String a=dataSnapshot.getValue().toString();
+                List.add(a);
+
+
+                int size2 = List.size() - 1;
+                for (int i = size2; i >= 0; i--) {
+                    REVList.add(List.get(i));
+
+                }
+
+
+
+                linearLayoutManager=new LinearLayoutManager(MainActivity.this);
+                RecyclerView mMessageList= (RecyclerView) findViewById(R.id.recyclerview);
+
+                mMessageList.setHasFixedSize(true);
+                mMessageList.setLayoutManager(linearLayoutManager);
+                myAdapter=new MyAdapter(REVList,MainActivity.this);
+                mMessageList.setAdapter(myAdapter);
+
+                Log.d("A", REVList.size()+"");
+                myAdapter.notifyDataSetChanged();
+                if(dataSnapshot.getChildrenCount()==0){
+                    Toast.makeText(getBaseContext(),"A",Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -292,4 +378,53 @@ public  void getList(){
 
 
 }
+    public void  Delete(int position){
+
+
+        final DatabaseReference databaseReference =FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Discover").child("like").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+               long h=dataSnapshot.getChildrenCount();
+               databaseReference.child("Discover").child("posts").child(dataSnapshot.getKey()).child("like").setValue(h);
+                databaseReference.child("Discover").child("likecountposts").child(dataSnapshot.getKey()).setValue(h);
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                long h=dataSnapshot.getChildrenCount();
+                databaseReference.child("Discover").child("posts").child(dataSnapshot.getKey()).child("like").setValue(h);
+                databaseReference.child("Discover").child("likecountposts").child(dataSnapshot.getKey()).setValue(h);
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                long h=dataSnapshot.getChildrenCount();
+                databaseReference.child("Discover").child("posts").child(dataSnapshot.getKey()).child("like").setValue(h);
+                databaseReference.child("Discover").child("likecountposts").child(dataSnapshot.getKey()).setValue(h);
+                databaseReference.child("Discover").child("likecountposts").child(dataSnapshot.getKey()).setValue(h);
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                long h=dataSnapshot.getChildrenCount();
+                databaseReference.child("Discover").child("posts").child(dataSnapshot.getKey()).child("like").setValue(h);
+                databaseReference.child("Discover").child("likecountposts").child(dataSnapshot.getKey()).setValue(h);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+    }
 }

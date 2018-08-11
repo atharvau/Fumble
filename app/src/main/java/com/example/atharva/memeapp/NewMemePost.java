@@ -19,8 +19,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -38,6 +41,11 @@ public static ImageView imageView;
 public static EditText Caption;
 DatabaseReference databaseReference;
 public static ModelInfo modelInfo;
+
+public static int Points;
+
+
+
 //////////////////////////////////////////////////////////////////////////////////
 FirebaseStorage storage;
     StorageReference storageRef,imageRef,DownRef;
@@ -71,7 +79,6 @@ EditText caption;
 
 key=MainActivity.key;
 caption=findViewById(R.id.caption);
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 imageView=findViewById(R.id.imageView4);
@@ -116,7 +123,6 @@ databaseReference.child("A").setValue("A");
         switch (item.getItemId()) {
             case R.id.share:
                 uploadImage();
-                pushtoFire();
 
                 return true;
 
@@ -126,21 +132,6 @@ databaseReference.child("A").setValue("A");
     }
 
 
-    public  void pushtoFire(){
-        Scaption=caption.getText().toString();
-
-
-        databaseReference.child("Discover").child("posts").child(key).setValue(modelInfo);
-        databaseReference.child("Discover").child("posts").child(key).child("caption").setValue(Scaption);
-        databaseReference.child("Discover").child("posts").child(key).child("like").setValue(0);
-
-        databaseReference.child("Discover").child("list").child(key).setValue(key);
-
-
-
-        uploadImage();
-
-    }
     public void uploadImage() {
 
         //create reference to images folder and assing a name to the file that will be uploaded
@@ -189,7 +180,6 @@ databaseReference.child("A").setValue("A");
 
 
 
-                // DownRef=storageRef.child("images/" +"Posts" + "/"+username+"/"+key+"/");
 
 
                 DownRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -199,23 +189,24 @@ databaseReference.child("A").setValue("A");
 
 
                         String abix=uri.toString();
-                      //  Toast.makeText(getBaseContext(),abix,Toast.LENGTH_LONG).show();
-                        databaseReference.child("Discover").child("posts").child(key).child("meme").setValue(abix).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
+Toast.makeText(getBaseContext(),abix,Toast.LENGTH_SHORT).show();
+
+                        Scaption=caption.getText().toString();
+//////////////////////////////////////////////////////////////////////////////////////////////////
+                        databaseReference.child("Discover").child("posts").child(key).setValue(modelInfo);
+                        databaseReference.child("Discover").child("posts").child(key).child("caption").setValue(Scaption);
+                        databaseReference.child("Discover").child("posts").child(key).child("like").setValue(0);
+                        databaseReference.child("Discover").child("list").child(key).setValue(key);
 
 
-                                Intent intent=new Intent(NewMemePost.this,MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                                Toast.makeText(getBaseContext(),"Meme Shared Successfully!",Toast.LENGTH_SHORT).show();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("meme").setValue(abix);
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).setValue(modelInfo);
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("caption").setValue(Scaption);
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("like").setValue(0);
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("list").child(key).setValue(key);
 
-                            }
-                        });
-
-
-
-
+                        databaseReference.child("Discover").child("posts").child(key).child("meme").setValue(abix);
 
 
 
@@ -227,4 +218,14 @@ databaseReference.child("A").setValue("A");
         });
 
         }
-    }
+
+
+
+
+        }
+
+
+
+
+
+
