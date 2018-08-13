@@ -2,27 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:id="@+id/as"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shadow"
+    android:gravity="left|center"
+    android:weightSum="100">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/imageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"
+        android:layout_weight="10"
         android:elevation="1dp"
         android:src="@drawable/circle_shape_background"
         android:translationZ="1dp" />
 
-    <TextView
-        android:id="@+id/lt"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/shadow"
-        android:elevation="1dp"
-        android:padding="5dp"
-        android:text="jkjkjkjkjkjk"
-        android:textAlignment="viewStart"
-        android:translationZ="1dp" />
+        android:layout_height="match_parent"
+        android:layout_weight="80"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/usernamme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/hind_medium"
+            android:text="TextView"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right|center"
+        android:layout_weight="10"
+        android:padding="7dp"
+        app:srcCompat="@drawable/send" />
 </LinearLayout>

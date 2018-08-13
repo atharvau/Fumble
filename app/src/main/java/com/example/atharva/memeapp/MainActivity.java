@@ -1,5 +1,6 @@
 package com.example.atharva.memeapp;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -67,8 +68,8 @@ uid="a";
 
         //////////////////////////////////////////
 
-
-
+        getSupportActionBar().setCustomView(R.layout.appbar);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
         Delete(0);
 
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
@@ -295,7 +296,6 @@ myAdapter.notifyDataSetChanged();
                 Log.d("A", REVList.size()+"");
 
                 if(dataSnapshot.getChildrenCount()==0){
-                    Toast.makeText(getBaseContext(),"A",Toast.LENGTH_SHORT).show();
                 }
 
 

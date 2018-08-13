@@ -4,25 +4,35 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -33,6 +43,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class NewMemePost extends AppCompatActivity {
     private static final int SELECT_PHOTO = 100;
@@ -43,7 +54,8 @@ DatabaseReference databaseReference;
 public static ModelInfo modelInfo;
 
 public static int Points;
-
+public static EditText searchtext;
+public  static ImageButton search;
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +70,17 @@ FirebaseStorage storage;
     String key;
 String Scaption;
 EditText caption;
+////////////////////////////////////
+DatabaseReference   UserDatabase;
+    ArrayList<String> flist = new ArrayList<String>();
+
+    ArrayList<String> Slist = new ArrayList<String>();
+
+
+    SearchListadapter hj;
+    public static  SearchListBase searchListBase;
+
+
 
 
     @Override
@@ -71,6 +94,114 @@ EditText caption;
    setTitle("New Post");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Loadfriendlist();
+
+
+
+
+        //------------------------------------------------------------//
+        final ListView listView=findViewById(R.id.list);
+        searchListBase=new SearchListBase(this,Slist);
+        listView.setAdapter(searchListBase);
+        UserDatabase = FirebaseDatabase.getInstance().getReference("Profiles").child("Users");
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////
+        search=findViewById(R.id.search);
+        searchtext=findViewById(R.id.searchtext);
+
+
+searchtext.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+
+        findViewById(R.id.recyclerview).setVisibility(View.GONE);
+
+        listView.setVisibility(View.VISIBLE);
+
+    }
+});
+
+
+
+search.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+
+
+        Slist.clear();
+String searchText=searchtext.getText().toString();
+        Query firebaseSearchQuery = UserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+
+
+
+        firebaseSearchQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                Toast.makeText(getBaseContext(),dataSnapshot.getKey().toString(),Toast.LENGTH_SHORT).show();
+Slist.add(dataSnapshot.getKey().toString()) ;searchListBase=new SearchListBase(NewMemePost.this,Slist);
+                listView.setAdapter(searchListBase);
+
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+    }
+});
+
+
+
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), 2);
+        viewPager.setAdapter(adapter);
+
+     TabLayout   tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+tabLayout.getTabAt(0).setText("Recent");
+tabLayout.getTabAt(1).setText("Search");
+
+
+
+
+
+
+
+
+
 
 
 
@@ -221,8 +352,50 @@ Toast.makeText(getBaseContext(),abix,Toast.LENGTH_SHORT).show();
 
 
 
+        public  void Loadfriendlist(){
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Discover").child("Friendlist").child(modelInfo.getUid()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("A", "onChildAdded: "+dataSnapshot.getValue().toString());
+                flist.add(dataSnapshot.getValue().toString());
 
-        }
+Toast.makeText(getBaseContext(),dataSnapshot.getValue().toString(),Toast.LENGTH_SHORT).show();
+
+                LinearLayoutManager linearLayoutManager=new LinearLayoutManager(NewMemePost.this);
+                RecyclerView mMessageList= (RecyclerView) findViewById(R.id.recyclerview);
+
+                mMessageList.setHasFixedSize(true);
+                mMessageList.setLayoutManager(linearLayoutManager);
+                flistadapter    myAdapter=new flistadapter(flist,NewMemePost.this);
+                mMessageList.setAdapter(myAdapter);
+                myAdapter.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        }}
 
 
 

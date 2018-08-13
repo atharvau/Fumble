@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 
-public class messageadapter extends RecyclerView.Adapter<messageadapter.MyViewHolder>{
+public class NewMessAd extends RecyclerView.Adapter<NewMessAd.MyViewHolder>{
     Context ctx;
 
 
@@ -57,14 +56,17 @@ public class messageadapter extends RecyclerView.Adapter<messageadapter.MyViewHo
     public static  ModelInfo modelInfo;
     int iLike=0,i;
 
+    String sender ="a";
+    String reciver="b";
+
+
 
     public static String memeoftheday;
     public static String uid;
 
 
-
-    ArrayList<ModelMessage> RevList = new ArrayList<ModelMessage>();
-    public messageadapter(  ArrayList<ModelMessage> RevList, Context ctx)
+    ArrayList<modelmessagenew> RevList = new ArrayList<modelmessagenew>();
+    public NewMessAd(  ArrayList<modelmessagenew> RevList, Context ctx)
     {
         this.RevList =RevList ;
         this.ctx=ctx;
@@ -73,7 +75,7 @@ public class messageadapter extends RecyclerView.Adapter<messageadapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.messagelist,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.mess,parent,false);
 
         return new MyViewHolder(view);
     }
@@ -82,38 +84,18 @@ public class messageadapter extends RecyclerView.Adapter<messageadapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
 
+if(RevList.get(position).getSender()!=null) {
 
-        modelInfo=MainActivity.modelInfo;
+    if (RevList.get(position).getSender().equals(sender)) {
+        holder.l.setVisibility(View.GONE);
 
-        if(RevList.get(position).getUid().equals(MainActivity.modelInfo.getUid())) {
+    } else {
 
-            holder.l.setVisibility(View.GONE);
-            holder.r.setVisibility(View.VISIBLE);
-
-            holder.Rmessage.setText(RevList.get(position).getMessage());
-
-            Log.d("A", "onBindViewHolder: "+"YES");
-        }
-else if (RevList.get(position).getUid().equals("b")){
-
-            holder.r.setVisibility(View.GONE);
-            holder.l.setVisibility(View.VISIBLE);
-
-            Log.d("A", "onBindViewHolder: "+"NO");
-
-            holder.Lmessage.setText(RevList.get(position).getMessage());
+        holder.r.setVisibility(View.GONE);
 
 
-        }
-
-
-
-
-
-
-
-
-
+    }
+}
 
     }
 
@@ -124,29 +106,18 @@ else if (RevList.get(position).getUid().equals("b")){
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-TextView Lmessage;
-ImageView Limage;
-TextView Rmessage;
-ImageView Rimage;
-LinearLayout l;
-LinearLayout r;
-
-
-
+ImageView l,r;
         public MyViewHolder(View itemView) {
             super(itemView);
 
-
-Lmessage=itemView.findViewById(R.id.leftm);
-Limage=itemView.findViewById(R.id.leftim);
-Rmessage=itemView.findViewById(R.id.rightm);
-Rimage=itemView.findViewById(R.id.rightim);
 l=itemView.findViewById(R.id.l);
 r=itemView.findViewById(R.id.r);
 
 
         }
     }
+
+
 
 
 
