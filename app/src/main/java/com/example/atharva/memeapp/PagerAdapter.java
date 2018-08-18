@@ -22,6 +22,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 TabFragement2 tab2 = new TabFragement2();
                 return tab2;
+            case 2:
+                TabFragement3 tab3 = new TabFragement3();
+                return tab3;
 
             default:
                 return null;
@@ -32,4 +35,9 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return mNumOfTabs;
     }
+
+
+
+
+
 }

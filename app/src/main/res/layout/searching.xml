@@ -18,12 +18,14 @@
 
         <EditText
             android:id="@+id/searchtext"
-            android:layout_width="282dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:hint="Search"
             android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:textSize="12sp" />
 
         <ImageButton
@@ -32,6 +34,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
 
+            android:visibility="gone"
             app:srcCompat="@drawable/search" />
 
     </LinearLayout>

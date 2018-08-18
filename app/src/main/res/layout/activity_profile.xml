@@ -7,109 +7,113 @@
     android:orientation="vertical"
     tools:context=".Profile">
 
-    <LinearLayout
-        android:id="@+id/lin1"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shadow"
-        android:elevation="5dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="15dp">
+        android:background="#E91E63 "
+        android:theme="@style/Theme.Design.Light">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageView6"
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:transitionName="pro" />
-
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/linearLayout5"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView6"
+                android:layout_width="@dimen/profile_propic"
+                android:layout_height="@dimen/profile_propic"
+                android:src="@drawable/mrogers"
+                android:transitionName="pro"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.26" />
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/hind_medium"
-                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="m_rogers"
                 android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
                 android:textStyle="bold"
-                android:transitionName="username" />
+                android:transitionName="username"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/textView6"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/hind_medium"
-                android:text="TextView"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@fon"
+                android:text="Mark Spencer Roger"
                 android:textAlignment="center"
-                android:textSize="8sp" />
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_weight="1"
-                android:text="dfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-                android:textAlignment="center"
-                android:textSize="8sp"
-                android:visibility="gone" />
+            <ImageView
+                android:id="@+id/imageView15"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:rotation="315"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/imageView16"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/isend" />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView16"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/bv" />
 
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shadow"
-        android:orientation="horizontal"
-        android:translationZ="5dp">
+        </android.support.constraint.ConstraintLayout>
 
-
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="wrap_content"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_grid" />
+            android:background="#E91E63 "
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:tabTextColor="@color/white_color" />
+    </android.support.design.widget.AppBarLayout>
+<android.support.v4.view.ViewPager
+    android:id="@+id/viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_li" />
-    </LinearLayout>
-
-    <GridView
-        android:id="@+id/grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="4"
-        android:visibility="visible"></GridView>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:visibility="gone">
-
-
-    </android.support.v7.widget.RecyclerView>
-
+</android.support.v4.view.ViewPager>
 </LinearLayout>

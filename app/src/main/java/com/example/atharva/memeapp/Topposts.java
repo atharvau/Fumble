@@ -65,8 +65,7 @@ DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference(
         databaseReference.child("Discover").child("likecountposts").orderByValue().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-              Toast.makeText(getBaseContext(),dataSnapshot.getValue().toString(),Toast.LENGTH_SHORT).show();
-              List.add(dataSnapshot.getKey());
+                List.add(dataSnapshot.getKey());
 
                 REVList.clear();
 
@@ -81,64 +80,19 @@ DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference(
 
                 mMessageList.setHasFixedSize(true);
                 mMessageList.setLayoutManager(linearLayoutManager);
-                  myAdapter=new MyAdapter(REVList,Topposts.this);
-                  mMessageList.setAdapter(myAdapter);
-
-
-
-
-
+                myAdapter=new MyAdapter(REVList,Topposts.this);
+                mMessageList.setAdapter(myAdapter);
 
 
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                List.add(dataSnapshot.getKey());
-
-                REVList.clear();
-
-                int size2 = List.size() - 1;
-                for (int i = size2; i >= 0; i--) {
-                    REVList.add(List.get(i));
-
-                }
-
-                linearLayoutManager=new LinearLayoutManager(Topposts.this);
-                RecyclerView mMessageList= (RecyclerView) findViewById(R.id.rec);
-
-                mMessageList.setHasFixedSize(true);
-                mMessageList.setLayoutManager(linearLayoutManager);
-                myAdapter=new MyAdapter(REVList,Topposts.this);
-                mMessageList.setAdapter(myAdapter);
-
-
-
 
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                List.add(dataSnapshot.getKey());
-
-                REVList.clear();
-
-                int size2 = List.size() - 1;
-                for (int i = size2; i >= 0; i--) {
-                    REVList.add(List.get(i));
-
-                }
-
-                linearLayoutManager=new LinearLayoutManager(Topposts.this);
-                RecyclerView mMessageList= (RecyclerView) findViewById(R.id.rec);
-
-                mMessageList.setHasFixedSize(true);
-                mMessageList.setLayoutManager(linearLayoutManager);
-                myAdapter=new MyAdapter(REVList,Topposts.this);
-                mMessageList.setAdapter(myAdapter);
-
-
-
 
             }
 
@@ -152,7 +106,6 @@ DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference(
 
             }
         });
-
 
 
 

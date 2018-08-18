@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -91,7 +92,6 @@ DatabaseReference   UserDatabase;
    selectedImage= MainActivity.resultUri;
    modelInfo=MainActivity.modelInfo;
    Toast.makeText(getBaseContext(),""+selectedImage,Toast.LENGTH_SHORT).show();
-   setTitle("New Post");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Loadfriendlist();
@@ -111,81 +111,19 @@ DatabaseReference   UserDatabase;
 
 
 
-///////////////////////////////////////////////////////////////
-        search=findViewById(R.id.search);
-        searchtext=findViewById(R.id.searchtext);
-
-
-searchtext.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-
-        findViewById(R.id.recyclerview).setVisibility(View.GONE);
-
-        listView.setVisibility(View.VISIBLE);
-
-    }
-});
-
-
-
-search.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-
-
-        Slist.clear();
-String searchText=searchtext.getText().toString();
-        Query firebaseSearchQuery = UserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-
-
-
-        firebaseSearchQuery.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                Toast.makeText(getBaseContext(),dataSnapshot.getKey().toString(),Toast.LENGTH_SHORT).show();
-Slist.add(dataSnapshot.getKey().toString()) ;searchListBase=new SearchListBase(NewMemePost.this,Slist);
-                listView.setAdapter(searchListBase);
-
-
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//////////
 
 
 
 
 
-    }
-});
 
 
 
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), 2);
+                (getSupportFragmentManager(), 3);
         viewPager.setAdapter(adapter);
 
      TabLayout   tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -194,12 +132,15 @@ Slist.add(dataSnapshot.getKey().toString()) ;searchListBase=new SearchListBase(N
 tabLayout.getTabAt(0).setText("Recent");
 tabLayout.getTabAt(1).setText("Search");
 
+        tabLayout.getTabAt(2).setText("Groups");
 
 
 
 
+setTitle("");
 
-
+      Toolbar  mTopToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(mTopToolbar);
 
 
 
@@ -325,7 +266,7 @@ Toast.makeText(getBaseContext(),abix,Toast.LENGTH_SHORT).show();
                         Scaption=caption.getText().toString();
 //////////////////////////////////////////////////////////////////////////////////////////////////
                         databaseReference.child("Discover").child("posts").child(key).setValue(modelInfo);
-                        databaseReference.child("Discover").child("posts").child(key).child("caption").setValue(Scaption);
+                      databaseReference.child("Discover").child("posts").child(key).child("uid").setValue(MainActivity.modelInfo.getUid());
                         databaseReference.child("Discover").child("posts").child(key).child("like").setValue(0);
                         databaseReference.child("Discover").child("list").child(key).setValue(key);
 
@@ -333,8 +274,8 @@ Toast.makeText(getBaseContext(),abix,Toast.LENGTH_SHORT).show();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("meme").setValue(abix);
                         databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).setValue(modelInfo);
-                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("caption").setValue(Scaption);
-                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("like").setValue(0);
+                        databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("uid").setValue(MainActivity.modelInfo.getUid());
+                       databaseReference.child("Userposts").child(modelInfo.getUid()).child("posts").child(key).child("like").setValue(0);
                         databaseReference.child("Userposts").child(modelInfo.getUid()).child("list").child(key).setValue(key);
 
                         databaseReference.child("Discover").child("posts").child(key).child("meme").setValue(abix);
@@ -354,13 +295,13 @@ Toast.makeText(getBaseContext(),abix,Toast.LENGTH_SHORT).show();
 
         public  void Loadfriendlist(){
         DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Discover").child("Friendlist").child(modelInfo.getUid()).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("PrivateMessages").child(modelInfo.getUid()).child("List").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Log.d("A", "onChildAdded: "+dataSnapshot.getValue().toString());
-                flist.add(dataSnapshot.getValue().toString());
+                flist.add(dataSnapshot.getKey().toString());
 
-Toast.makeText(getBaseContext(),dataSnapshot.getValue().toString(),Toast.LENGTH_SHORT).show();
+Toast.makeText(getBaseContext(),dataSnapshot.getKey().toString(),Toast.LENGTH_SHORT).show();
 
                 LinearLayoutManager linearLayoutManager=new LinearLayoutManager(NewMemePost.this);
                 RecyclerView mMessageList= (RecyclerView) findViewById(R.id.recyclerview);

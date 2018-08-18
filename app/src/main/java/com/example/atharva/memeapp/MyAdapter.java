@@ -18,10 +18,12 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,14 +90,185 @@ DatabaseReference mdb;
 
 
         mdb= FirebaseDatabase.getInstance().getReference();
-        mdb.child("Discover").child("posts").child(RevList.get(position)).child("meme").addValueEventListener(new ValueEventListener() {
+
+
+
+
+        mdb.child("Discover").child("posts").child(RevList.get(position)).child("uid").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-       if (dataSnapshot.exists()) Glide.with(ctx).load(dataSnapshot.getValue().toString()).into(holder.img);
+                final String THisUSer;
 
+                THisUSer=dataSnapshot.getValue().toString();
+
+                holder.pro.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent intent=new Intent(ctx,Profile.class);
+
+
+                        Pair<View, String> p1 = Pair.create((View)holder.pro, "pro");
+                        Pair<View, String> p2 = Pair.create((View)holder.username, "username");
+
+                        intent.putExtra("uid",THisUSer);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)ctx, p1,p2);
+                        ctx.startActivity(intent, options.toBundle());
+
+
+
+
+
+
+
+
+
+
+                    }
+                });
 
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+        mdb.child("Discover").child("posts").child(RevList.get(position)).child("meme").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+
+       if (dataSnapshot.exists()) {
+       Glide.with(ctx).load(dataSnapshot.getValue().toString()).into(holder.img);
+
+
+
+           holder.dot.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   //pass the 'context' here
+
+
+
+
+                   PopupMenu popup = new PopupMenu(ctx, view);
+                   //Inflating the Popup using xml file
+                   popup.getMenuInflater().inflate(R.menu.postmenu, popup.getMenu());
+
+                   popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                       public boolean onMenuItemClick(MenuItem item) {
+                           Intent intent=new Intent(ctx,SendThisMEME.class);
+                           intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                           intent.putExtra("meme",dataSnapshot.getValue().toString());
+                           ctx.startActivity(intent);
+
+
+
+
+
+
+
+
+
+                           return true;
+                       }
+                   });
+
+
+
+
+
+
+
+
+
+                   popup.show();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ctx);
+                   alertDialog.setTitle("Do You Want To Report This Post");
+                   //alertDialog.setMessage("");
+                   alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           dialog.cancel();
+                           AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                           builder.setTitle("Why You Want Report This Post")
+                                   .setItems(R.array.system, new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           // The 'which' argument contains the index position
+                                           // of the selected item
+
+                                           switch (which) {
+
+
+                                               case 0:   DatabaseReference md = FirebaseDatabase.getInstance().getReference();
+                                                   md.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("NU");
+                                                   break;
+
+                                               case 1:
+                                                   DatabaseReference md1 = FirebaseDatabase.getInstance().getReference();
+                                                   md1.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("RE");
+
+                                               case 2:
+                                                   DatabaseReference md2 = FirebaseDatabase.getInstance().getReference();
+                                                   md2.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("YO");
+
+                                               case 3:
+                                                   DatabaseReference md3 = FirebaseDatabase.getInstance().getReference();
+                                                   md3.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("OT");
+
+
+                                           }                            }
+                                   });
+
+
+                           // AlertDialog alertDialog1=builder.create();
+                           //  alertDialog1.show();
+                       }
+                   });
+                   alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           dialog.dismiss();
+
+                       }
+                   });
+
+                   //AlertDialog dialog = alertDialog.create();
+                   //dialog.show();
+
+               }
+           });
+
+
+
+       }}
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -139,7 +312,7 @@ DatabaseReference mdb;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot.exists()) holder.caption.setText(dataSnapshot.getValue().toString());
+             //   if (dataSnapshot.exists()) holder.caption.setText(dataSnapshot.getValue().toString());
 
 
             }
@@ -195,8 +368,7 @@ iLike++;
         if(iLike%2!=0) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             databaseReference.child("Discover").child("like").child(RevList.get(position)).child(modelInfo.getUsername()).setValue(modelInfo.getUid());
-       holder.like.playAnimation();
-       holder.like.setChecked(true);
+
             DatabaseReference mdb=FirebaseDatabase.getInstance().getReference();
             mdb.child("Discover").child("like").child(RevList.get(position)).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -221,8 +393,6 @@ else
         if(iLike%2==0) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             databaseReference.child("Discover").child("like").child(RevList.get(position)).child(modelInfo.getUsername()).removeValue();
-            holder.like.playAnimation();
-            holder.like.setChecked(false);
 
 
 
@@ -304,113 +474,8 @@ holder.img.setOnClickListener(new View.OnClickListener() {
         Delete(position);
 
 
-      AdRequest adRequest = new AdRequest.Builder().build();
-        holder.adView.loadAd(adRequest);
-
-        
-holder.dot.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-        //pass the 'context' here
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ctx);
-        alertDialog.setTitle("Do You Want To Report This Post");
-        //alertDialog.setMessage("");
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-                builder.setTitle("Why You Want Report This Post")
-                        .setItems(R.array.system, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // The 'which' argument contains the index position
-                                // of the selected item
-
-                                switch (which) {
 
 
-                                    case 0:   DatabaseReference md = FirebaseDatabase.getInstance().getReference();
-                                        md.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("NU");
-                                        break;
-
-                                    case 1:
-                                        DatabaseReference md1 = FirebaseDatabase.getInstance().getReference();
-                                        md1.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("RE");
-
-                                    case 2:
-                                        DatabaseReference md2 = FirebaseDatabase.getInstance().getReference();
-                                        md2.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("YO");
-
-                                    case 3:
-                                        DatabaseReference md3 = FirebaseDatabase.getInstance().getReference();
-                                        md3.child("Reports").child(RevList.get(position)).child(MainActivity.modelInfo.getUid()).setValue("OT");
-
-
-                                }                            }
-                        });
-
-
-                AlertDialog alertDialog1=builder.create();
-                alertDialog1.show();
-            }
-        });
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-
-            }
-        });
-
-        AlertDialog dialog = alertDialog.create();
-        dialog.show();
-
-    }
-});
-        
-holder.textView5.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-
-        Intent ias1=new Intent(ctx,wholiked.class);
-
-
-        Pair<View, String> p1 = Pair.create((View)holder.like, "like");
-        ias1.putExtra("key",RevList.get(position));
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)ctx, p1);
-        ctx.startActivity(ias1, options.toBundle());
-
-
-    }
-});
-        
-holder.pro.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-
-        Intent intent=new Intent(ctx,Profile.class);
-
-
-        Pair<View, String> p1 = Pair.create((View)holder.pro, "pro");
-        Pair<View, String> p2 = Pair.create((View)holder.username, "username");
-
-        intent.putExtra("uid",uid);
-
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)ctx, p1,p2);
-        ctx.startActivity(intent, options.toBundle());
-
-
-
-
-
-
-
-
-
-
-    }
-});
 
 
     }
@@ -432,16 +497,16 @@ holder.pro.setOnClickListener(new View.OnClickListener() {
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            username=itemView.findViewById(R.id.username);
+            username=itemView.findViewById(R.id.textView21);
             caption=itemView.findViewById(R.id.caption);
 
-            img=itemView.findViewById(R.id.img);
-            pro=itemView.findViewById(R.id.profile_image);
-            like=itemView.findViewById(R.id.likeButton);
-            counts=itemView.findViewById(R.id.textView5);
-            dot=itemView.findViewById(R.id.dot2);
+            img=itemView.findViewById(R.id.imageView22);
+            pro=itemView.findViewById(R.id.imageView19);
+            like=itemView.findViewById(R.id.spark_button);
+            counts=itemView.findViewById(R.id.textView23);
+            dot=itemView.findViewById(R.id.imageView21);
             textView5=itemView.findViewById(R.id.textView5);
-            adView=itemView.findViewById(R.id.adView);
+            adView=itemView.findViewById(R.id.adView2);
 
 
 

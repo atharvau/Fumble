@@ -14,12 +14,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private MyAdapter myAdapter;
     public static Uri resultUri;
     public static ModelInfo modelInfo;
-    String uid="a";
+    String uid;
 //////////////////////////////////////////////////////////////////
     public static String key;
 ////////////////////////////////////////////////////////////////////////////
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
        public static ArrayList<String> List = new ArrayList<String>();
     public static ArrayList<String> REVList = new ArrayList<String>();
 
+    public static ArrayList<String> uidlist = new ArrayList<String>();
+    public static ArrayList<String> RevUidList = new ArrayList<String>();
 
 
 
@@ -59,17 +63,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-uid="a";
+uid=FirebaseAuth.getInstance().getUid();
+        FirebaseInstanceId.getInstance().getToken();
+Toast.makeText(getBaseContext(),FirebaseInstanceId.getInstance().getToken().toString(),Toast.LENGTH_SHORT).show();
         getList();
 //////////////////////////////////////////////
         getInfo();
+
         GetKey();
       //  getMemes();
+        SendNotif();
+        SETREF();
+        //////SendNotif////////////////////////////////////
 
-        //////////////////////////////////////////
 
-        getSupportActionBar().setCustomView(R.layout.appbar);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_CUSTOM);
         Delete(0);
 
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
@@ -95,8 +102,36 @@ findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
 
 });
 
+findViewById(R.id.button7).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
 
 
+
+        Intent intent=new Intent(MainActivity.this,Story.class);
+
+
+        startActivity(intent);
+
+
+
+
+
+    }
+});
+
+
+
+
+
+
+findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        Intent intent=new Intent(MainActivity.this,Stories.class);
+        startActivity(intent);
+    }
+});
 
 
 
@@ -425,6 +460,23 @@ myAdapter.notifyDataSetChanged();
 
 
 
+
+    }
+
+    public  void SendNotif(){
+
+
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+        String key=  databaseReference.child("Notifications").child(MainActivity.modelInfo.getUid()).push().getKey();
+        databaseReference.child("Notifications").child(MainActivity.modelInfo.getUid()).child(key).child("from").setValue("a");
+        databaseReference.child("Notifications").child(MainActivity.modelInfo.getUid()).child(key).child("type").setValue("request");
+
+    }
+    public void SETREF(){
+
+        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+String token=FirebaseInstanceId.getInstance().getToken();
+        databaseReference.child("Profiles").child("Users").child(MainActivity.modelInfo.getUid()).child("device_token").setValue(token);
 
     }
 }
